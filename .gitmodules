@@ -1,0 +1,6 @@
+[submodule "openpoc-backend"]
+	path = openpoc-backend
+	url = ./openpoc-backend
+[submodule "openpoc-frontend/v0-open-po-c-dashboard-design-2"]
+	path = openpoc-frontend/v0-open-po-c-dashboard-design-2
+	url = ./openpoc-frontend/v0-open-po-c-dashboard-design-2
