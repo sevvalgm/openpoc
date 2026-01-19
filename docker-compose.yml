@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: openpoc-postgres
+    environment:
+      POSTGRES_USER: publisher
+      POSTGRES_PASSWORD: publisher
+      POSTGRES_DB: openpoc-dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U publisher"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API Service
+  backend:
+    build:
+      context: ./openpoc-backend
+      dockerfile: Dockerfile
+    container_name: openpoc-backend
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://publisher:publisher@postgres:5432/openpoc-dev
+      JWT_ACCESS_SECRET: JDJiJDEwJEpKOE8xNHFMdGhjYlBSWEhkNGdlNi5tSmJOUDEvNFo2aHNNN1ZyWWt3bGlKaVpRalcxaEEu
+      JWT_REFRESH_SECRET: refreshSuperSecret123
+      JWT_ACCESS_EXPIRES_IN: 7d
+      JWT_REFRESH_EXPIRES_IN: 1h
+      PORT: 4041
+      API_PREFIX: api
+      BACKEND_URL: http://backend:4041
+      FRONTEND_URL: http://frontend:3000
+      CORS_ORIGIN: "http://localhost:3000,http://frontend:3000"
+    ports:
+      - "4041:4041"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./openpoc-backend/src:/app/src
+    command: npm run dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4041/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./openpoc-frontend/v0-open-po-c-dashboard-design-2
+      dockerfile: Dockerfile
+    container_name: openpoc-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:4041
+      NEXT_PUBLIC_BACKEND_URL: http://backend:4041
+      NEXT_PUBLIC_FRONTEND_URL: http://localhost:3000
+      NEXT_PUBLIC_NODE_ENV: development
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./openpoc-frontend/v0-open-po-c-dashboard-design-2:/app
+      - /app/.next
+    command: npm run dev
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: openpoc-network

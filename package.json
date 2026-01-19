@@ -1,0 +1,36 @@
+{
+  "name": "openpoc-unified",
+  "version": "1.0.0",
+  "description": "OpenPoC - Unified Backend & Frontend Development",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && run-s install:backend install:frontend",
+    "install:backend": "cd openpoc-backend && npm install",
+    "install:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm install",
+    "dev": "concurrently --names \"BACKEND,FRONTEND\" --colors \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd openpoc-backend && npm run dev",
+    "dev:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm run dev",
+    "build:all": "run-s build:backend build:frontend",
+    "build:backend": "cd openpoc-backend && npm run build",
+    "build:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm run build",
+    "start:backend": "cd openpoc-backend && npm start",
+    "start:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm start",
+    "test": "concurrently \"npm run test:backend\" \"npm run test:frontend\"",
+    "test:backend": "cd openpoc-backend && npm test",
+    "test:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm test",
+    "lint": "concurrently \"npm run lint:backend\" \"npm run lint:frontend\"",
+    "lint:backend": "cd openpoc-backend && npm run lint",
+    "lint:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm run lint",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "clean": "run-s clean:backend clean:frontend && rimraf node_modules",
+    "clean:backend": "cd openpoc-backend && rimraf node_modules dist .next",
+    "clean:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && rimraf node_modules .next dist"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^5.0.5"
+  }
+}
