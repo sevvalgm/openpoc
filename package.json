@@ -10,6 +10,7 @@
     "dev": "concurrently --names \"BACKEND,FRONTEND\" --colors \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd openpoc-backend && npm run dev",
     "dev:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm run dev",
+    "build": "npm run build:all",
     "build:all": "run-s build:backend build:frontend",
     "build:backend": "cd openpoc-backend && npm run build",
     "build:frontend": "cd openpoc-frontend/v0-open-po-c-dashboard-design-2 && npm run build",
